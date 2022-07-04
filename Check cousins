@@ -16,55 +16,66 @@ public class solution {
 	}
 	 */
 
-	public static boolean isCousin(BinaryTreeNode<Integer> root, int a, int b) {
-		// Write your code here
-        if ((level(root,a,1) == level(root,b,1)) && !(isSibling(root,a,b))) 
-        return true; 
-    else return false;
+	public static boolean isCousin(BinaryTreeNode<Integer> root, int p, int q) {
+		 int depth1 = depth(root,p);
+        int depth2 = depth(root,q);
+        
+        if(depth1 == 0 || depth2 == 0){
+            return false;
+        }
+        
+        if(depth1 == depth2){
+            return !siblings(root,p,q);
+        }else{
+            return false;
+        }
+        
+	}
+    
+    private static boolean siblings(BinaryTreeNode<Integer> root ,int p,int q){
+        if(root == null){
+            return false;
+        }
+        
+        if(root.left != null && root.right != null){
+            if(root.right.data == p && root.left.data == q){
+                return true;
+            }else if(root.right.data == q && root.left.data == p){
+                return true;
+            }else{
+                return siblings(root.left,p,q) || siblings(root.right,p,q);
+            }
+        }
+        
+        if(root.left != null){
+           return siblings(root.left,p,q);
+        }
+        else{
+             return siblings(root.right,p,q);
+        }
+ 
     }
     
-    public static int level(BinaryTreeNode<Integer> root, int ptr, int lev) 
-{ 
-    // base cases 
-    if (root == null) return 0; 
-    if (root.data == ptr)  return lev; 
-  
-    // Return level if Node is present in left subtree 
-    int l = level(root.left, ptr, lev+1); 
-    if (l != 0)  return l; 
-  
-    // Else search in right subtree 
-    return level(root.right, ptr, lev+1); 
-} 
-    
-    public static boolean isSibling(BinaryTreeNode<Integer> root, int data_one, 
-                             int data_two) 
-{ 
+    private static int depth(BinaryTreeNode<Integer> root ,int p){
+        if(root == null){
+            return 0;
+        }
         
-    if (root!=null) 
-        return false; 
-  
-    // Compare the two given nodes with 
-    // the childrens of current node 
-    if (root.left!=null && root.right!=null) { 
-        int left = root.left.data; 
-        int right = root.right.data; 
-  
-        if (left == data_one && right == data_two) 
-            return true; 
-        else if (left == data_two && right == data_one) 
-            return true; 
-    } 
-  
-    // Check for left subtree 
-    if (root.left!=null) 
-         isSibling(root.left, data_one, 
-                                data_two); 
-  
-    // Check for right subtree 
-    if (root.right!=null) 
-         isSibling(root.right, data_one, 
-                                data_two); 
-        return true;      
-}      
+        if(root.data == p){
+            return 1;
+        }
+        
+        int left = depth(root.left,p);
+        if(left != 0){
+            return left+1;
+        }
+        int right = depth(root.right,p);
+        
+        if(right != 0){
+            return right+1;
+        }else{
+            return 0;
+
+	}
+}
 }
